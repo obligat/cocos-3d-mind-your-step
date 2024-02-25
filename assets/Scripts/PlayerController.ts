@@ -1,5 +1,6 @@
 import {
   _decorator,
+  Animation,
   Component,
   EventMouse,
   input,
@@ -27,6 +28,9 @@ export class PlayerController extends Component {
   private _deltaPos: Vec3 = new Vec3(0, 0, 0);
   // 角色目标位置
   private _targetPos: Vec3 = new Vec3();
+
+  @property({ type: Animation })
+  public BodyAnim: Animation | null = null;
 
   start() {
     input.on(Input.EventType.MOUSE_UP, this.onMouseUp, this);
@@ -58,6 +62,14 @@ export class PlayerController extends Component {
     this.node.getPosition(this._curPos);
     // 目标位置 = 当前位置 + 步长
     Vec3.add(this._targetPos, this._curPos, new Vec3(this._jumpStep, 0, 0));
+
+    if (this.BodyAnim) {
+      if (step == 1) {
+        this.BodyAnim.play("oneStep");
+      } else if (step === 2) {
+        this.BodyAnim.play("twoStep");
+      }
+    }
   }
 
   update(deltaTime: number) {
